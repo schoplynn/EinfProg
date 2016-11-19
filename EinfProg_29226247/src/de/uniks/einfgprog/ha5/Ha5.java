@@ -8,12 +8,6 @@ public class Ha5 extends PApplet {
 
 	}
 
-	// Autor: Christian Bier
-	// Matrikelnr.: 292 262 47
-	// =======================
-
-	// Globale Variablen
-	// =================
 	int wallDepth = 20;
 	float paddle1PosX = 0;
 	float paddle1PosY = 0;

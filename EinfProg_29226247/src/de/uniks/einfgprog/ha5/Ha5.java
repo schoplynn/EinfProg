@@ -1,6 +1,16 @@
+/*
+ * %W% %E% Christian Bier
+ * Copyright (c) 2016 Christian Bier, All Rights Reserved.
+ */
 package de.uniks.einfgprog.ha5;
 
 import processing.core.PApplet;
+
+/**
+ * Dieses Programm wurde im Rahmen der Hausaufgabe Nr. 4 der Vorlesung
+ * Einfuehrung in die Programmierung der Universitaet Kassel, Prof.
+ * Albert Zuendorf, erstellt. 
+ */
 
 public class Ha5 extends PApplet {
 	public static void main(String[] args) {
@@ -96,18 +106,22 @@ public class Ha5 extends PApplet {
 
 	void ball() {
 
-		// Abfrage: Ist der Ball aus dem Spielfeld geflogen?
-		// Wenn ja, wird er in der Mitte wieder eingesetzt
-		// =================================================
+		/* Abfrage: Ist der Ball aus dem Spielfeld geflogen?
+		 * Wenn ja, wird er in der Mitte wieder eingesetzt
+		 */
+
 		if (ballOut == true) {
 			ballPosX = width / 2 + 100;
 			ballPosY = (height - 2 * wallDepth) / 2;
 			ballOut = false;
 			ballDir = false;
-			//  Zuruecksetzen der extra Geschwindigkeit auf den Startwert
+			// Zuruecksetzen der extra Geschwindigkeit auf den Startwert
+
 			ballXSpeed = ballXSpeedStart;
-			//  Umkehr der Ballrichtung um der Start-Richtungs-Monotonie
-			// entgegen zu wirken
+			/* Umkehr der Ballrichtung um der Start-Richtungs-Monotonie
+			 * entgegen zu wirken
+			 */
+
 			if (right == true) {
 				ballXSpeed = -1 * ballXSpeed;
 				right = false;
@@ -115,26 +129,32 @@ public class Ha5 extends PApplet {
 				ballPosX = width / 2 - 100;
 			}
 
-			//  Zuruecksetzen des Y-Speeds um den Ball wieder gerade starten zu
-			// lassen
+			/* Zuruecksetzen des Y-Speeds um den Ball wieder gerade starten zu
+			 * lassen
+			 */
 			ballYSpeed = 0;
 		}
 
 		// Abfrage: Ist der Ball mit paddle2 kollidiert?
-		// =============================================
 		if ((ballPosX + ballSize / 2) >= paddle2PosX) {
-			if ((ballPosY + ballSize / 2) >= paddle2PosY && (ballPosY - ballSize / 2) <= (paddle2PosY + paddle2SizeY)) {
-				//  Pruefen ob eine Taste zum bewegen des Paddles gedrueckt ist
-				// um einen Spin mit zu geben
+			if ((ballPosY + ballSize / 2) >= paddle2PosY &&
+					(ballPosY - ballSize / 2) <= (paddle2PosY + paddle2SizeY)) {
+				/* Pruefen ob eine Taste zum bewegen des Paddles gedrueckt ist
+				 * um einen Spin mit zu geben
+				 */
+				
 				if (keyPressed && key == 'o' || keyPressed && key == 'l') {
 
 					ballXSpeed = -1.25 * ballXSpeed;
 					ballYSpeed = (ballPosY - paddle2PosY - paddle2SizeY / 2) * 0.05;
 					ballDir = true;
 
-					//  Begrenzen der maximalen Geschwindigkeitszunahme in
-					// beiden Richtungen auf
-					// das doppelte der Startgeschwindigkeit
+					/* Begrenzen der maximalen Geschwindigkeitszunahme in
+					 * beiden Richtungen auf
+					 * das doppelte der Startgeschwindigkeit
+					 *
+					 */
+					
 					if (ballXSpeed > (ballXSpeedStart * 2) || ballXSpeed < (-1 * (ballXSpeedStart * 2))) {
 						ballXSpeed = ballXSpeedStart * 2;
 					}
@@ -152,18 +172,23 @@ public class Ha5 extends PApplet {
 			}
 		}
 		// Abfrage: Ist der Ball mit paddle1 kollidiert?
-		// =============================================
+		
 		else if ((ballPosX - ballSize / 2) <= paddle1PosX + paddle1SizeX) {
-			if ((ballPosY + ballSize / 2) >= paddle1PosY && (ballPosY - ballSize / 2) <= (paddle1PosY + paddle1SizeY)) {
-				// Pruefen ob eine Taste zum bewegen des Paddles gedrueckt ist
-				// um einen Spin mit zu geben
+			if ((ballPosY + ballSize / 2) >= paddle1PosY &&
+					(ballPosY - ballSize / 2) <= (paddle1PosY + paddle1SizeY)) {
+				
+				/* Pruefen ob eine Taste zum bewegen des Paddles gedrueckt ist
+				 * um einen Spin mit zu geben
+				 */
+				
 				if (keyPressed && key == 'w' || keyPressed && key == 's') {
 					ballXSpeed = -1.25 * ballXSpeed;
 					ballYSpeed = (ballPosY - paddle2PosY - paddle2SizeY / 2) * 0.05;
 					ballDir = false;
-					// Begrenzen der maximalen Geschwindigkeitszunahme in beiden
-					// Richtungen auf
-					// das doppelte der Startgeschwindigkeit
+					/* Begrenzen der maximalen Geschwindigkeitszunahme in beiden
+					 * Richtungen auf das doppelte der Startgeschwindigkeit
+					 */
+
 					if (ballXSpeed > (ballXSpeedStart * 2) || ballXSpeed < (-1 * (ballXSpeedStart * 2))) {
 						ballXSpeed = ballXSpeedStart * 2;
 					}
@@ -178,7 +203,9 @@ public class Ha5 extends PApplet {
 				scoreTwo++;
 			}
 		}
+
 		// Abfrage: Beruehrt der Ball die obere Wand?
+		
 		if (ballPosY - ballSize / 2 <= wallDepth) {
 			ballYSpeed = ballYSpeed * -1;
 		}
@@ -196,7 +223,6 @@ public class Ha5 extends PApplet {
 		ellipse(ballPosX, ballPosY, ballSize, ballSize);
 
 		// Hochzaehlen der Ballposition X und Y
-		// ====================================
 		ballPosX += ballXSpeed;
 		ballPosY += ballYSpeed;
 	}
@@ -206,11 +232,12 @@ public class Ha5 extends PApplet {
 		int yPos = wallDepth + 30;
 		while (brickNo < 5) {
 			if (ballPosY > yPos && ballPosY < (yPos + 80)) {
-				// Abfrage: Beruehrt der Ball den Brick und aus welcher Richtung
-				// kommt er?
-				// Die Trefferzone des Balls wurde bewusst mittig gehalten da
-				// dieser sonst nur schwer zwischen den Luecken der Bricks
-				// hindurchkommt
+				/* Abfrage: Beruehrt der Ball den Brick und aus welcher Richtung
+				 * kommt er? Die Trefferzone des Balls wurde bewusst mittig
+				 * gehalten da dieser sonst nur schwer zwischen den Luecken
+				 * der Bricks dieser sonst nur schwer zwischen den Luecken der Bricks
+				 */
+
 				if (ballDir == false && ballPosX - (ballSize / 2) < (brickPosX + brickHitCount[brickNo] + brickSizeX)
 						&& ballPosX + (ballSize / 2) > brickPosX + brickHitCount[brickNo]) {
 					ballXSpeed = -ballXSpeed;
@@ -244,7 +271,7 @@ public class Ha5 extends PApplet {
 				paddle1PosY = paddle1PosY - paddleSpeed;
 			}
 		} else if (keyPressed && key == 's') {
-			//  Pruefen ob Paddle1 die untere Wand beruehrt
+			// ï¿½Pruefen ob Paddle1 die untere Wand beruehrt
 			if ((paddle1PosY + paddle1SizeY) >= (height - wallDepth)) {
 				paddle1PosY = paddle1PosY;
 			} else {
@@ -258,14 +285,14 @@ public class Ha5 extends PApplet {
 	void paddle2() {
 
 		if (keyPressed && key == 'o') {
-			//  Pruefen ob Paddle2 die obere Wand beruehrt
+			// ï¿½Pruefen ob Paddle2 die obere Wand beruehrt
 			if (paddle2PosY <= wallDepth) {
 				paddle2PosY = paddle2PosY;
 			} else {
 				paddle2PosY = paddle2PosY - paddleSpeed;
 			}
 		} else if (keyPressed && key == 'l') {
-			//  Pruefen ob Paddle2 die untere Wand beruehrt
+			// ï¿½Pruefen ob Paddle2 die untere Wand beruehrt
 			if ((paddle2PosY + paddle2SizeY) >= (height - wallDepth)) {
 				paddle2PosY = paddle2PosY;
 			} else {
@@ -308,8 +335,8 @@ public class Ha5 extends PApplet {
 	}
 
 	void showControlButtons() {
-		//  Anzeige der Tastaturbelegung im Spielfeld fuer ca. 20 Sekunden
-		//  mit einer Framerate von ca. 60
+		// ï¿½Anzeige der Tastaturbelegung im Spielfeld fuer ca. 20 Sekunden
+		// ï¿½mit einer Framerate von ca. 60
 		if (controlTime < 1200) {
 			textSize(20);
 			fill(colorLines);

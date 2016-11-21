@@ -1,21 +1,19 @@
 /*
- * %W% %E% Christian Bier
+ * Author: Christian Bier
+ * Date: 21.11.2016
  * Copyright (c) 2016 Christian Bier, All Rights Reserved.
+ * Dieses Programm wurde im Rahmen der Hausaufgabe Nr. 4 der Vorlesung
+ * Einfuehrung in die Programmierung der Universitaet Kassel, Prof.
+ * Albert Zuendorf, erstellt. 
  */
 package de.uniks.einfgprog.ha5;
 
 import processing.core.PApplet;
 
-/**
- * Dieses Programm wurde im Rahmen der Hausaufgabe Nr. 4 der Vorlesung
- * Einfuehrung in die Programmierung der Universitaet Kassel, Prof.
- * Albert Zuendorf, erstellt. 
- */
-
 public class Ha5 extends PApplet {
+
 	public static void main(String[] args) {
 		PApplet.main("de.uniks.einfgprog.ha5.Ha5");
-
 	}
 
 	int wallDepth = 20;
@@ -80,34 +78,37 @@ public class Ha5 extends PApplet {
 		ball();
 	}
 
-	void bricks() {
+	public void bricks() {
+
+		/*
+		 * Diese Methode zeichnet die vertikalen Steine im Spielfeld.
+		 */
+
 		brickPosY = wallDepth + 30;
 		int brickCount = 0;
 
 		while ((brickPosY + brickSizeY) < height) {
-			// Ist die xPos eines Bricks kleiner als 90 wird er wieder in die
-			// Mitte zurueckgesetzt
+
 			if ((brickPosX + brickHitCount[brickCount]) < 90) {
 				brickHitCount[brickCount] = 0;
 				ballDir = false;
-			}
-			// Ist die xPos eines Bricks groesser als 1090 wird er wieder in die
-			// Mitte zurueckgesetzt
-			else if ((brickPosX + brickHitCount[brickCount]) > 1090) {
+			} else if ((brickPosX + brickHitCount[brickCount]) > 1090) {
 				brickHitCount[brickCount] = 0;
 				ballDir = true;
 			}
-			// Zeichnen der Bricks
 			rect(brickPosX + brickHitCount[brickCount], brickPosY, brickSizeX, brickSizeY);
 			brickCount++;
 			brickPosY += brickSizeY + 50;
 		}
 	}
 
-	void ball() {
+	public void ball() {
 
-		/* Abfrage: Ist der Ball aus dem Spielfeld geflogen?
-		 * Wenn ja, wird er in der Mitte wieder eingesetzt
+		/* 
+		 * Diese Methode zeichnet den Ball und ist ausserdem
+		 * fuer die Kollisionsabfrage mit Waenden, Paddles
+		 * verantwortlich. Auch die Ueberpruefung ob sich
+		 * der Ball im Aus befindet wird hier durchgefuehrt.
 		 */
 
 		if (ballOut == true) {
@@ -115,11 +116,11 @@ public class Ha5 extends PApplet {
 			ballPosY = (height - 2 * wallDepth) / 2;
 			ballOut = false;
 			ballDir = false;
-			// Zuruecksetzen der extra Geschwindigkeit auf den Startwert
-
 			ballXSpeed = ballXSpeedStart;
-			/* Umkehr der Ballrichtung um der Start-Richtungs-Monotonie
-			 * entgegen zu wirken
+
+			/* 
+			 * Umkehr der Ballrichtung um der Start-Richtungs-Monotonie
+			 * entgegen zu wirken.
 			 */
 
 			if (right == true) {
@@ -128,34 +129,23 @@ public class Ha5 extends PApplet {
 				ballDir = true;
 				ballPosX = width / 2 - 100;
 			}
-
-			/* Zuruecksetzen des Y-Speeds um den Ball wieder gerade starten zu
-			 * lassen
-			 */
 			ballYSpeed = 0;
 		}
 
-		// Abfrage: Ist der Ball mit paddle2 kollidiert?
-		if ((ballPosX + ballSize / 2) >= paddle2PosX) {
-			if ((ballPosY + ballSize / 2) >= paddle2PosY &&
-					(ballPosY - ballSize / 2) <= (paddle2PosY + paddle2SizeY)) {
-				/* Pruefen ob eine Taste zum bewegen des Paddles gedrueckt ist
-				 * um einen Spin mit zu geben
-				 */
-				
-				if (keyPressed && key == 'o' || keyPressed && key == 'l') {
+		/* 
+		 * Der folgende Block behandelt die Kollisionsabfrage mit
+		 * Paddles, Waenden und Bricks.
+		 */
 
+		if ((ballPosX + ballSize / 2) >= paddle2PosX) {
+			if ((ballPosY + ballSize / 2) >= paddle2PosY
+					&& (ballPosY - ballSize / 2) <= (paddle2PosY + paddle2SizeY)) {
+				if (keyPressed && key == 'o' || keyPressed && key == 'l') {
 					ballXSpeed = -1.25 * ballXSpeed;
 					ballYSpeed = (ballPosY - paddle2PosY - paddle2SizeY / 2) * 0.05;
 					ballDir = true;
-
-					/* Begrenzen der maximalen Geschwindigkeitszunahme in
-					 * beiden Richtungen auf
-					 * das doppelte der Startgeschwindigkeit
-					 *
-					 */
-					
-					if (ballXSpeed > (ballXSpeedStart * 2) || ballXSpeed < (-1 * (ballXSpeedStart * 2))) {
+					if (ballXSpeed > (ballXSpeedStart * 2)
+							|| ballXSpeed < (-1 * (ballXSpeedStart * 2))) {
 						ballXSpeed = ballXSpeedStart * 2;
 					}
 				} else {
@@ -163,33 +153,23 @@ public class Ha5 extends PApplet {
 					ballYSpeed = (ballPosY - paddle2PosY - paddle2SizeY / 2) * 0.07;
 					ballDir = true;
 				}
-			} else if (((ballPosY) < paddle2PosY && (ballPosX - ballSize / 2) > (paddle2PosX + paddle2SizeX))
-					|| ((ballPosY) > (paddle2PosY + paddle2SizeY)
-							&& (ballPosX - ballSize / 2) > (paddle2PosX + paddle2SizeX))) {
+			} else if (((ballPosY) < paddle2PosY
+					   && (ballPosX - ballSize / 2) > (paddle2PosX + paddle2SizeX))
+					   || ((ballPosY) > (paddle2PosY + paddle2SizeY)
+					   && (ballPosX - ballSize / 2) > (paddle2PosX + paddle2SizeX))) {
 				ballOut = true;
 				right = true;
 				scoreOne++;
 			}
-		}
-		// Abfrage: Ist der Ball mit paddle1 kollidiert?
-		
-		else if ((ballPosX - ballSize / 2) <= paddle1PosX + paddle1SizeX) {
-			if ((ballPosY + ballSize / 2) >= paddle1PosY &&
-					(ballPosY - ballSize / 2) <= (paddle1PosY + paddle1SizeY)) {
-				
-				/* Pruefen ob eine Taste zum bewegen des Paddles gedrueckt ist
-				 * um einen Spin mit zu geben
-				 */
-				
+		} else if ((ballPosX - ballSize / 2) <= paddle1PosX + paddle1SizeX) {
+			if ((ballPosY + ballSize / 2) >= paddle1PosY
+					&& (ballPosY - ballSize / 2) <= (paddle1PosY + paddle1SizeY)) {
 				if (keyPressed && key == 'w' || keyPressed && key == 's') {
 					ballXSpeed = -1.25 * ballXSpeed;
 					ballYSpeed = (ballPosY - paddle2PosY - paddle2SizeY / 2) * 0.05;
 					ballDir = false;
-					/* Begrenzen der maximalen Geschwindigkeitszunahme in beiden
-					 * Richtungen auf das doppelte der Startgeschwindigkeit
-					 */
-
-					if (ballXSpeed > (ballXSpeedStart * 2) || ballXSpeed < (-1 * (ballXSpeedStart * 2))) {
+					if (ballXSpeed > (ballXSpeedStart * 2)
+							|| ballXSpeed < (-1 * (ballXSpeedStart * 2))) {
 						ballXSpeed = ballXSpeedStart * 2;
 					}
 				} else {
@@ -198,62 +178,62 @@ public class Ha5 extends PApplet {
 					ballDir = false;
 				}
 			} else if ((ballPosY < paddle1PosY && (ballPosX + ballSize / 2) < paddle1PosX)
-					|| (ballPosY > (paddle1PosY + paddle1SizeY) && (ballPosX + ballSize / 2) < (paddle1PosX))) {
+					   || (ballPosY > (paddle1PosY + paddle1SizeY)
+					   && (ballPosX + ballSize / 2) < (paddle1PosX))) {
 				ballOut = true;
 				scoreTwo++;
 			}
 		}
-
-		// Abfrage: Beruehrt der Ball die obere Wand?
-		
 		if (ballPosY - ballSize / 2 <= wallDepth) {
 			ballYSpeed = ballYSpeed * -1;
 		}
-
-		// Abfrage: Beruehrt der Ball die untere Wand?
 		if (ballPosY + ballSize / 2 >= (height - wallDepth)) {
 			ballYSpeed = ballYSpeed * -1;
 		}
-
-		// Abfrage: Trifft der Ball einen der Bricks?
 		bricksHit();
-
-		// Zeichnen des Balls
 		fill(colorBall);
 		ellipse(ballPosX, ballPosY, ballSize, ballSize);
-
-		// Hochzaehlen der Ballposition X und Y
 		ballPosX += ballXSpeed;
 		ballPosY += ballYSpeed;
 	}
 
-	void bricksHit() {
+	public void bricksHit() {
+		
+		/* 
+		 * Diese Methode ueberprueft ob der Ball mit den
+		 * vertikalen Steinen im Spielfeld kollidiert ist.
+		 */
+		
 		int brickNo = 0;
 		int yPos = wallDepth + 30;
 		while (brickNo < 5) {
 			if (ballPosY > yPos && ballPosY < (yPos + 80)) {
-				/* Abfrage: Beruehrt der Ball den Brick und aus welcher Richtung
+				
+				/* 
+				 * Abfrage: Beruehrt der Ball den Brick und aus welcher Richtung
 				 * kommt er? Die Trefferzone des Balls wurde bewusst mittig
 				 * gehalten da dieser sonst nur schwer zwischen den Luecken
 				 * der Bricks dieser sonst nur schwer zwischen den Luecken der Bricks
 				 */
 
-				if (ballDir == false && ballPosX - (ballSize / 2) < (brickPosX + brickHitCount[brickNo] + brickSizeX)
+				if (ballDir == false && ballPosX - (ballSize / 2)
+						< (brickPosX + brickHitCount[brickNo] + brickSizeX)
 						&& ballPosX + (ballSize / 2) > brickPosX + brickHitCount[brickNo]) {
 					ballXSpeed = -ballXSpeed;
-					// Versetzen der Brick X-Position um 10 Pixel nach rechts
 					brickHitCount[brickNo] += 10;
 				}
-				// Abfrage: Beruehrt der Ball den Brick und aus welcher Richtung
-				// kommt er?
-				// Die Trefferzone des Balls wurde bewusst mittig gehalten da
-				// dieser sonst nur schwer zwischen den Luecken der Bricks
-				// hindurchkommt
+				
+				/*
+				 *  Abfrage: Beruehrt der Ball den Brick und aus welcher Richtung
+				 *  kommt er? Die Trefferzone des Balls wurde bewusst mittig
+				 *  gehalten da dieser sonst nur schwer zwischen den Luecken der
+				 *  Bricks hindurchkommt.
+				 */	
+				
 				else if (ballDir == true
 						&& ballPosX - (ballSize / 2) < (brickPosX + brickHitCount[brickNo] + brickSizeX)
 						&& ballPosX + (ballSize / 2) > brickPosX + brickHitCount[brickNo]) {
 					ballXSpeed = -ballXSpeed;
-					// Versetzen der Brick X-Position um 10 Pixel nach links
 					brickHitCount[brickNo] -= 10;
 				}
 			}
@@ -261,17 +241,24 @@ public class Ha5 extends PApplet {
 			brickNo++;
 		}
 	}
+	
 
-	void paddle1() {
-		if (keyPressed && key == 'w') {
-			// Pruefen ob das Paddle1 die obere Wand beruehrt
+	public void paddle1() {
+		
+		/*
+		 * Diese Methode zeichnet das Paddle Nr. 1
+		 * (Paddle auf der linken Seite) und ist
+		 * ebefalls fuer die Bewegung des Paddles
+		 * verantwortlich.
+		 */
+		
+		if (keyPressed && (key == 'w')) {
 			if (paddle1PosY <= wallDepth) {
 				paddle1PosY = paddle1PosY;
 			} else {
 				paddle1PosY = paddle1PosY - paddleSpeed;
 			}
-		} else if (keyPressed && key == 's') {
-			// �Pruefen ob Paddle1 die untere Wand beruehrt
+		} else if (keyPressed && (key == 's')) {
 			if ((paddle1PosY + paddle1SizeY) >= (height - wallDepth)) {
 				paddle1PosY = paddle1PosY;
 			} else {
@@ -281,18 +268,24 @@ public class Ha5 extends PApplet {
 		fill(colorLines);
 		rect(paddle1PosX, paddle1PosY, paddle1SizeX, paddle1SizeY, 20, 20, 20, 20);
 	}
+	
 
-	void paddle2() {
+	public void paddle2() {
+		
+		/*
+		 * Diese Methode zeichnet das Paddle Nr. 2
+		 * (Paddle auf der rechten Seite) und ist
+		 * ebefalls fuer die Bewegung des Paddles
+		 * verantwortlich.
+		 */
 
-		if (keyPressed && key == 'o') {
-			// �Pruefen ob Paddle2 die obere Wand beruehrt
+		if (keyPressed && (key == 'o')) {
 			if (paddle2PosY <= wallDepth) {
 				paddle2PosY = paddle2PosY;
 			} else {
 				paddle2PosY = paddle2PosY - paddleSpeed;
 			}
-		} else if (keyPressed && key == 'l') {
-			// �Pruefen ob Paddle2 die untere Wand beruehrt
+		} else if (keyPressed && (key == 'l')) {
 			if ((paddle2PosY + paddle2SizeY) >= (height - wallDepth)) {
 				paddle2PosY = paddle2PosY;
 			} else {
@@ -303,40 +296,80 @@ public class Ha5 extends PApplet {
 		int paddle2SizeX = 20;
 		rect(paddle2PosX, paddle2PosY, paddle2SizeX, paddle2SizeY, 20, 20, 20, 20);
 	}
+	
 
-	void scoreLeft() {
+	public void scoreLeft() {
+		
+		/*
+		 * Diese Methode zeigt den Score auf der linken
+		 * Seite des Bildschirms an.
+		 */
+		
 		textSize(20);
 		fill(colorLines);
 		text(scoreOne, paddle1PosX + paddle1SizeX + 5, wallDepth + 30);
 	}
+	
 
-	void scoreRight() {
+	public void scoreRight() {
+		
+		/*
+		 * Diese Methode zeigt den Score auf der rechten
+		 * Seite des Bildschirms an.
+		 */
+		
 		textSize(20);
 		fill(colorLines);
 		text(scoreTwo, paddle2PosX - 15, wallDepth + 30);
 	}
+	
 
-	void middleStroke() {
+	public void middleStroke() {
+		
+		/*
+		 * Diese Mehode zeichnet den vertikalen Strich
+		 * in der Mitte des Spielfelds.
+		 */
+		
 		int middleStrokeSizeX = 5;
 		fill(colorLines);
 		rect((width / 2 - middleStrokeSizeX / 2), 0, middleStrokeSizeX, height);
 	}
 
-	void wallTop() {
+	public void wallTop() {
+		
+		/*
+		 * Diese Methode zeichnet den horizontalen
+		 * Strich am oberen Rand des Spielfelds.
+		 */
+		
 		noStroke();
 		fill(colorLines);
 		rect(0, 0, width, wallDepth);
 	}
+	
 
-	void wallBottom() {
+	public void wallBottom() {
+		
+		/*
+		 * Diese Methode zeichnet den horizontalen
+		 * Strich am unteren Rand des Spielfelds.
+		 */
+		
 		noStroke();
 		fill(colorLines);
 		rect(0, (height - wallDepth), width, wallDepth);
 	}
+	
 
-	void showControlButtons() {
-		// �Anzeige der Tastaturbelegung im Spielfeld fuer ca. 20 Sekunden
-		// �mit einer Framerate von ca. 60
+	public void showControlButtons() {
+		
+		/*
+		 * Diese Methode zeigt die zur Steuerung festgelegten
+		 * Tasten fuer ca. 20 Sekunden im unteren Bereich des
+		 * Spielfelds an.
+		 */
+
 		if (controlTime < 1200) {
 			textSize(20);
 			fill(colorLines);
